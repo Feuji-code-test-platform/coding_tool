@@ -5,6 +5,7 @@ A modern, full-featured coding assessment platform for recruiters to create, man
 ## Features
 
 ### Recruiter Dashboard
+
 - 📊 **Assessment Management** - Create and manage coding assessments
 - 🎯 **Question Selection** - Choose from AI-generated and database questions
 - 👥 **Candidate Management** - Add candidates individually or in bulk
@@ -12,6 +13,7 @@ A modern, full-featured coding assessment platform for recruiters to create, man
 - 📈 **Results Tracking** - Monitor candidate progress and scores
 
 ### Design Highlights
+
 - Modern, clean UI inspired by professional recruitment platforms
 - Responsive design that works on desktop, tablet, and mobile
 - Beautiful gradient card designs with hover effects
@@ -20,6 +22,7 @@ A modern, full-featured coding assessment platform for recruiters to create, man
 ## Tech Stack
 
 ### Frontend
+
 - **React** - UI framework
 - **React Router** - Client-side routing
 - **Lucide React** - Beautiful icon library
@@ -27,6 +30,7 @@ A modern, full-featured coding assessment platform for recruiters to create, man
 - **Vite** - Build tool and dev server
 
 ### Planned Backend
+
 - **Node.js** with Express
 - **PostgreSQL** - Database
 - **JWT** - Authentication
@@ -36,6 +40,7 @@ A modern, full-featured coding assessment platform for recruiters to create, man
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js 16+ and npm
 
 ### Installation
@@ -59,14 +64,16 @@ npm run dev
 4. Open your browser to `http://localhost:5173`
 
 ### Mock Authentication
+
 For development, the app uses mock authentication:
+
 - Any email/password combination will work on login
 - Registration creates a mock session
 - Token is stored in localStorage
 
 ## Project Structure
 
-\`\`\`
+```
 coding-platform-frontend/
 ├── src/
 │   ├── components/
@@ -94,25 +101,31 @@ coding-platform-frontend/
 │   └── main.jsx
 ├── index.html
 └── package.json
-\`\`\`
+```
 
 ## Key Features Walkthrough
 
 ### 1. Dashboard
+
 The main dashboard displays all assessments in a beautiful card grid layout:
+
 - Visual status indicators (Active/Draft)
 - Candidate count tracking
 - Time since last edit
 - Quick access to assessment details
 
 ### 2. Create Assessment
+
 Multi-step wizard for creating assessments:
+
 - **Step 1:** Enter job details (role, difficulty, tech stack, duration)
 - **Step 2:** Select 3 questions from 12 options (6 AI-generated + 6 from database)
 - **Step 3:** Add candidates (coming soon)
 
 ### 3. Assessment Details
+
 Comprehensive assessment management:
+
 - **Candidates Tab:** Add, view, and manage candidates
 - **Questions Tab:** Review selected questions
 - **Results Tab:** View candidate scores and performance
@@ -120,6 +133,7 @@ Comprehensive assessment management:
 - Send invites to all candidates at once
 
 ### 4. Candidate Management
+
 - Add candidates with name, email, and phone
 - Track candidate status (Invited, In Progress, Completed)
 - View scores for completed assessments
@@ -128,6 +142,7 @@ Comprehensive assessment management:
 ## Upcoming Features
 
 ### Candidate Exam Portal
+
 - Secure login with unique tokens
 - Instructions and consent screen
 - Live coding interface with Monaco editor
@@ -136,6 +151,7 @@ Comprehensive assessment management:
 - Timer and progress tracking
 
 ### Advanced Features
+
 - AI-powered code evaluation
 - Video recording playback
 - Plagiarism detection
@@ -163,17 +179,19 @@ POST   /api/candidates/send-invites/:assessmentId
 ## Customization
 
 ### Colors
+
 Edit CSS variables in `App.css`:
 \`\`\`css
 :root {
-  --primary-color: #ff6b35;  /* Orange accent */
+  --primary-color: #ff6b35;  /*Orange accent */
   --secondary-color: #2d3748; /* Dark gray */
   --success-color: #48bb78;   /* Green */
-  /* ... more colors */
+  /* ... more colors*/
 }
 \`\`\`
 
 ### Branding
+
 - Update logo in `Sidebar.jsx` and auth pages
 - Modify `CodeHire` text to your platform name
 - Customize gradient backgrounds in auth pages
@@ -188,18 +206,22 @@ Edit CSS variables in `App.css`:
 - `npm run lint` - Run ESLint
 
 ### Code Style
+
 - Components use functional components with hooks
 - CSS modules for component-specific styles
 - Consistent naming conventions
 - Responsive design patterns
 
 ## Browser Support
+
 - Chrome/Edge (latest 2 versions)
 - Firefox (latest 2 versions)
 - Safari (latest 2 versions)
 
 ## License
+
 MIT
 
 ## Support
+
 For issues and questions, please open an issue on GitHub.
