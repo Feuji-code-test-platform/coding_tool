@@ -164,7 +164,7 @@ Comprehensive assessment management:
 
 The frontend is ready to integrate with a backend API. Key endpoints needed:
 
-\`\`\`
+```
 POST   /api/auth/recruiter/register
 POST   /api/auth/recruiter/login
 POST   /api/assessments/create
@@ -174,21 +174,22 @@ GET    /api/questions/database
 POST   /api/candidates/add-single
 POST   /api/candidates/add-bulk
 POST   /api/candidates/send-invites/:assessmentId
-\`\`\`
+```
 
 ## Customization
 
 ### Colors
 
 Edit CSS variables in `App.css`:
-\`\`\`css
+```
+css
 :root {
   --primary-color: #ff6b35;  /*Orange accent */
   --secondary-color: #2d3748; /* Dark gray */
   --success-color: #48bb78;   /* Green */
   /* ... more colors*/
 }
-\`\`\`
+```
 
 ### Branding
 
