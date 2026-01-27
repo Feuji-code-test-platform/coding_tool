@@ -1,0 +1,153 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import ExamInstructions from './ExamInstructions';
+import ConsentForm from './ConsentForm';
+import ExamInterface from './ExamInterface';
+import ExamComplete from './ExamComplete';
+import './ExamPortal.css';
+
+function ExamPortal() {
+  const { token } = useParams();
+  const navigate = useNavigate();
+  
+  const [currentStep, setCurrentStep] = useState('loading'); // loading, instructions, consent, exam, complete
+  const [examData, setExamData] = useState(null);
+  const [error, setError] = useState('');
+  const [candidateInfo, setCandidateInfo] = useState(null);
+
+  useEffect(() => {
+    validateTokenAndLoadExam();
+  }, [token]);
+
+  const validateTokenAndLoadExam = async () => {
+    try {
+      // Call backend to validate token and get exam details
+      const response = await fetch(`http://localhost:5000/api/exam/validate/${token}`);
+      
+      if (!response.ok) {
+        throw new Error('Invalid or expired exam link');
+      }
+
+      const data = await response.json();
+      
+      // Check if exam is already submitted
+      if (data.status === 'completed') {
+        setError('This exam has already been completed');
+        return;
+      }
+
+      // Check if exam has expired
+      if (new Date(data.expiresAt) < new Date()) {
+        setError('This exam link has expired');
+        return;
+      }
+
+      setExamData(data);
+      setCandidateInfo({
+        name: data.candidateName,
+        email: data.candidateEmail,
+        assessmentTitle: data.assessmentTitle
+      });
+      
+      // Check if instructions were already viewed
+      const instructionsViewed = sessionStorage.getItem(`exam_instructions_${token}`);
+      if (instructionsViewed) {
+        setCurrentStep('consent');
+      } else {
+        setCurrentStep('instructions');
+      }
+
+    } catch (err) {
+      console.error('Token validation error:', err);
+      setError(err.message || 'Failed to load exam. Please check your link.');
+      setCurrentStep('error');
+    }
+  };
+
+  const handleInstructionsComplete = () => {
+    sessionStorage.setItem(`exam_instructions_${token}`, 'true');
+    setCurrentStep('consent');
+  };
+
+  const handleConsentGiven = async () => {
+    try {
+      // Record consent in backend
+      await fetch(`http://localhost:5000/api/exam/consent/${token}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ consentGiven: true })
+      });
+
+      setCurrentStep('exam');
+    } catch (err) {
+      console.error('Consent recording error:', err);
+      alert('Failed to record consent. Please try again.');
+    }
+  };
+
+  const handleExamComplete = () => {
+    setCurrentStep('complete');
+  };
+
+  if (currentStep === 'loading') {
+    return (
+      <div className="exam-portal-loading">
+        <div className="loading-spinner"></div>
+        <p>Loading your exam...</p>
+      </div>
+    );
+  }
+
+  if (currentStep === 'error' || error) {
+    return (
+      <div className="exam-portal-error">
+        <div className="error-container">
+          <div className="error-icon">⚠️</div>
+          <h1>Unable to Load Exam</h1>
+          <p>{error}</p>
+          <p className="error-hint">
+            Please contact your recruiter if you believe this is an error.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="exam-portal">
+      {currentStep === 'instructions' && (
+        <ExamInstructions
+          examData={examData}
+          candidateInfo={candidateInfo}
+          onContinue={handleInstructionsComplete}
+        />
+      )}
+
+      {currentStep === 'consent' && (
+        <ConsentForm
+          examData={examData}
+          candidateInfo={candidateInfo}
+          onConsent={handleConsentGiven}
+          onDecline={() => setError('Consent is required to proceed with the exam')}
+        />
+      )}
+
+      {currentStep === 'exam' && (
+        <ExamInterface
+          token={token}
+          examData={examData}
+          candidateInfo={candidateInfo}
+          onComplete={handleExamComplete}
+        />
+      )}
+
+      {currentStep === 'complete' && (
+        <ExamComplete
+          candidateInfo={candidateInfo}
+        />
+      )}
+    </div>
+  );
+}
+
+export default ExamPortal;

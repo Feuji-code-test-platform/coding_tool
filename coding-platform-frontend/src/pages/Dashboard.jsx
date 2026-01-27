@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Plus } from 'lucide-react';
@@ -123,7 +123,7 @@ function Dashboard() {
             onClick={() => navigate('/assessment/create')}
           >
             <Plus size={20} />
-            New Project
+            New Assessment
           </button>
         </div>
       </div>

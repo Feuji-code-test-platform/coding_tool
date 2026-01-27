@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import Layout from './components/Layout/Layout';
 import Dashboard from './pages/Dashboard';
 import CreateAssessment from './pages/CreateAssessment';
-import CreateAssessmentEnhanced from './pages/CreateAssessmentEnhanced';
 import AssessmentDetails from './pages/AssessmentDetails';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -69,8 +68,6 @@ function App() {
         />
 
         {/* Protected Routes - Only accessible when logged in */}
-        
-        {/* Dashboard */}
         <Route
           path="/dashboard"
           element={
@@ -81,22 +78,8 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* Assessment Creation - Enhanced Version with Multi-Step */}
         <Route
           path="/assessment/create"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <CreateAssessmentEnhanced />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Assessment Creation - Simple Version (Backup) */}
-        <Route
-          path="/assessment/create-simple"
           element={
             <ProtectedRoute>
               <Layout>
@@ -105,59 +88,12 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* Assessment Details */}
         <Route
           path="/assessment/:id"
           element={
             <ProtectedRoute>
               <Layout>
                 <AssessmentDetails />
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Reports - Placeholder for future */}
-        <Route
-          path="/reports"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <div style={{ padding: '2rem' }}>
-                  <h1>Reports</h1>
-                  <p>Coming soon...</p>
-                </div>
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Support - Placeholder for future */}
-        <Route
-          path="/support"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <div style={{ padding: '2rem' }}>
-                  <h1>Support</h1>
-                  <p>Coming soon...</p>
-                </div>
-              </Layout>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Settings - Placeholder for future */}
-        <Route
-          path="/settings"
-          element={
-            <ProtectedRoute>
-              <Layout>
-                <div style={{ padding: '2rem' }}>
-                  <h1>Settings</h1>
-                  <p>Coming soon...</p>
-                </div>
               </Layout>
             </ProtectedRoute>
           }

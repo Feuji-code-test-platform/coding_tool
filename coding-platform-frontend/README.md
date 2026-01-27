@@ -1,4 +1,4 @@
-# CodeHire - Coding Assessment Platform
+# Feuji CodeHire - TA/Recruiter view - Coding Platform
 
 A modern, full-featured coding assessment platform for recruiters to create, manage, and evaluate technical interviews.
 
