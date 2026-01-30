@@ -788,6 +788,20 @@
   min-height: 400px;
 }
 
+.code-textarea {
+  width: 100%;
+  height: 400px;
+  resize: none;
+  border: 1px solid #3e3e42;
+  border-radius: 8px;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 1rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
 /* Test Results */
 .test-results {
   padding: 1rem 1.5rem;

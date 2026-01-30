@@ -9,6 +9,30 @@ import ProctoringWarning from './ProctoringWarning';
 import useBrowserSecurity from '../hooks/useBrowserSecurity';
 import useExamTimer from '../hooks/useExamTimer';
 
+class EditorErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error) {
+    if (this.props.onError) {
+      this.props.onError(error);
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
+}
+
 function ExamInterface({ token, examData, candidateInfo, onComplete, useMockData = false }) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [questions, setQuestions] = useState([]);
@@ -20,13 +44,16 @@ function ExamInterface({ token, examData, candidateInfo, onComplete, useMockData
   const [proctoringWarnings, setProctoringWarnings] = useState([]);
   const [showWarningModal, setShowWarningModal] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [useSimpleEditor, setUseSimpleEditor] = useState(false);
   
   const autoSaveTimerRef = useRef(null);
   const warningCountRef = useRef(0);
 
   useEffect(() => {
     loadQuestions();
-    enterFullscreen();
+    if (!useMockData) {
+      enterFullscreen();
+    }
     startExam();
   }, []);
 
@@ -39,7 +66,7 @@ function ExamInterface({ token, examData, candidateInfo, onComplete, useMockData
   }, [code, currentQuestionIndex]);
 
   const { timeRemaining, formatTime } = useExamTimer(examData.duration * 60, handleTimeUp);
-  const violations = useBrowserSecurity(handleViolation);
+  const violations = useBrowserSecurity(handleViolation, { enabled: !useMockData });
 
   const loadQuestions = async () => {
     if (useMockData) {
@@ -305,7 +332,7 @@ function ExamInterface({ token, examData, candidateInfo, onComplete, useMockData
     handleSubmitExam();
   }
 
-  if (!questions.length) {
+  if (!examData || !candidateInfo || !questions.length) {
     return (
       <div className="exam-loading">
         <div className="loading-spinner"></div>
@@ -454,19 +481,38 @@ function ExamInterface({ token, examData, candidateInfo, onComplete, useMockData
           </div>
 
           <div className="code-editor">
-            <Editor
-              height="400px"
-              language={selectedLanguage}
-              value={code}
-              onChange={setCode}
-              theme="vs-dark"
-              options={{
-                minimap: { enabled: false },
-                fontSize: 14,
-                scrollBeyondLastLine: false,
-                automaticLayout: true
-              }}
-            />
+            {useSimpleEditor ? (
+              <textarea
+                className="code-textarea"
+                value={code}
+                onChange={(event) => setCode(event.target.value)}
+              />
+            ) : (
+              <EditorErrorBoundary
+                fallback={
+                  <textarea
+                    className="code-textarea"
+                    value={code}
+                    onChange={(event) => setCode(event.target.value)}
+                  />
+                }
+                onError={() => setUseSimpleEditor(true)}
+              >
+                <Editor
+                  height="400px"
+                  language={selectedLanguage}
+                  value={code}
+                  onChange={setCode}
+                  theme="vs-dark"
+                  options={{
+                    minimap: { enabled: false },
+                    fontSize: 14,
+                    scrollBeyondLastLine: false,
+                    automaticLayout: true
+                  }}
+                />
+              </EditorErrorBoundary>
+            )}
           </div>
 
           {testResults && (

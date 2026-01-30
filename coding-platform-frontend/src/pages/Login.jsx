@@ -72,7 +72,7 @@ function Login() {
         <div className="auth-header">
           <div className="logo-container">
             <FileCode size={32} color="#ff6b35" />
-            <h1 className="logo-text">CodeHire</h1>
+            <h1 className="logo-text">Feuji CodeHire</h1>
           </div>
           <h2 className="auth-title">Welcome Back</h2>
           <p className="auth-subtitle">Sign in to manage your assessments</p>

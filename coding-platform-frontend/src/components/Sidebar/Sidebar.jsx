@@ -4,6 +4,7 @@ import {
   LayoutDashboard, 
   FileCode, 
   BarChart3, 
+  Users,
   Settings, 
   HelpCircle,
   LogOut
@@ -15,7 +16,8 @@ function Sidebar({ isOpen }) {
 
   const menuItems = [
     { path: '/dashboard', icon: LayoutDashboard, label: 'Assessments' },
-    { path: '/reports', icon: BarChart3, label: 'Reports' },
+    { path: '/recruiter', icon: Users, label: 'Recruiter Dashboard' },
+    { path: '/results', icon: BarChart3, label: 'Assessment Analytics' },
     { path: '/support', icon: HelpCircle, label: 'Support' },
     { path: '/settings', icon: Settings, label: 'Settings' },
   ];

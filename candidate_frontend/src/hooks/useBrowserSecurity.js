@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 
-function useBrowserSecurity(onViolation) {
+function useBrowserSecurity(onViolation, options = {}) {
+  const { enabled = true } = options;
   const [violations, setViolations] = useState([]);
 
   useEffect(() => {
+    if (!enabled) {
+      return;
+    }
     // 1. Tab Switching Detection
     const handleVisibilityChange = () => {
       if (document.hidden) {
@@ -178,7 +182,7 @@ function useBrowserSecurity(onViolation) {
       window.removeEventListener('blur', handleBlur);
       clearInterval(devToolsInterval);
     };
-  }, [onViolation]);
+  }, [onViolation, enabled]);
 
   return violations;
 }

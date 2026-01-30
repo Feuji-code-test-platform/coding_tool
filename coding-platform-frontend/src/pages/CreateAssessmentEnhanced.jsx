@@ -10,12 +10,18 @@ import {
   Share2,
   ToggleLeft
 } from 'lucide-react';
+import axios from 'axios';
 import './CreateAssessmentEnhanced.css';
 
 function CreateAssessmentEnhanced() {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState([]);
+  const [jobApiState, setJobApiState] = useState({
+    loading: false,
+    error: '',
+    success: ''
+  });
   
   const [formData, setFormData] = useState({
     // Step 0: Job Details
@@ -94,7 +100,57 @@ function CreateAssessmentEnhanced() {
     }
   };
 
-  const handleNext = () => {
+  const submitJobDetails = async () => {
+    const jobTitle = formData.jobTitle.trim();
+    if (!jobTitle) {
+      setJobApiState({
+        loading: false,
+        error: 'Job title is required before continuing.',
+        success: ''
+      });
+      return false;
+    }
+
+    setJobApiState({ loading: true, error: '', success: '' });
+
+    const payload = {
+      jobTitle,
+      company: formData.clientCompany,
+      jobDescription: formData.jobDescription
+    };
+
+    try {
+      const response = await axios.post('http://localhost:8081/api/job-descriptions', payload);
+      const description = response?.data?.jobDescription;
+
+      if (description && !formData.jobDescription.trim()) {
+        setFormData((prev) => ({ ...prev, jobDescription: description }));
+      }
+
+      setJobApiState({
+        loading: false,
+        error: '',
+        success: 'Job details sent to API successfully.'
+      });
+    } catch (error) {
+      setJobApiState({
+        loading: false,
+        error: 'Unable to reach the job description API. Continuing with local data.',
+        success: ''
+      });
+    }
+
+    return true;
+  };
+
+  const handleNext = async () => {
+    if (currentStep === 0) {
+      const canProceed = await submitJobDetails();
+      if (!canProceed) {
+        return;
+      }
+    }
+
     // Mark current step as completed
     if (!completedSteps.includes(currentStep)) {
       setCompletedSteps([...completedSteps, currentStep]);
@@ -192,6 +248,17 @@ function CreateAssessmentEnhanced() {
           </div>
 
           <div className="step-body">
+            {currentStep === 0 && (jobApiState.loading || jobApiState.error || jobApiState.success) && (
+              <div
+                className={`api-status ${
+                  jobApiState.error ? 'api-status-error' : 'api-status-success'
+                }`}
+              >
+                {jobApiState.loading && <span>Saving job details to API...</span>}
+                {!jobApiState.loading && jobApiState.error && <span>{jobApiState.error}</span>}
+                {!jobApiState.loading && jobApiState.success && <span>{jobApiState.success}</span>}
+              </div>
+            )}
             <CurrentStepComponent 
               formData={formData}
               onChange={handleInputChange}
@@ -210,8 +277,13 @@ function CreateAssessmentEnhanced() {
             <button 
               className="btn-primary"
               onClick={handleNext}
+              disabled={currentStep === 0 && jobApiState.loading}
             >
-              {currentStep === steps.length - 1 ? 'Publish Assessment' : 'Save & Continue'}
+              {jobApiState.loading
+                ? 'Saving...'
+                : currentStep === steps.length - 1
+                  ? 'Publish Assessment'
+                  : 'Save & Continue'}
             </button>
           </div>
         </div>
@@ -237,18 +309,14 @@ function JobDetailsStep({ formData, onChange }) {
         </div>
 
         <div className="form-group">
-          <label>Client/Company</label>
-          <select
+          <label>Company</label>
+          <input
+            type="text"
+            placeholder="Enter company name"
             value={formData.clientCompany}
             onChange={(e) => onChange('clientCompany', e.target.value)}
-            className="form-select"
-          >
-            <option value="">Select company</option>
-            <option value="Feuji Software Solutions">Feuji Software Solutions</option>
-            <option value="Tech Corp">Tech Corp</option>
-            <option value="Innovation Labs">Innovation Labs</option>
-            <option value="Digital Systems">Digital Systems</option>
-          </select>
+            className="form-input"
+          />
         </div>
 
         <div className="form-group-checkbox">
@@ -301,13 +369,6 @@ function JobDetailsStep({ formData, onChange }) {
             value={formData.jobDescription}
             onChange={(e) => onChange('jobDescription', e.target.value)}
           />
-          
-          <div className="job-details-preview">
-            <p><strong>Experience:</strong> 3 - 6 years</p>
-            <p><strong>Location:</strong> Hyderabad - Work from Office</p>
-            <p><strong>Department:</strong> Enterprise Data & AI</p>
-            <p><strong>Reports To:</strong> Senior ML Engineer / Director - AI/ML Solutions</p>
-          </div>
         </div>
       </div>
     </div>
@@ -411,7 +472,7 @@ function InterviewQuestionsStep({ formData, onChange }) {
                 <span className="question-difficulty">Medium</span>
               </div>
             ))}
-          </div>
+          </div>  
         </div>
 
         <div className="questions-section">

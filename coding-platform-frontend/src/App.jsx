@@ -5,6 +5,8 @@ import Dashboard from './pages/Dashboard';
 import CreateAssessment from './pages/CreateAssessment';
 import CreateAssessmentEnhanced from './pages/CreateAssessmentEnhanced';
 import AssessmentDetails from './pages/AssessmentDetails';
+import ResultsAnalytics from './pages/ResultsAnalytics';
+import RecruiterDashboard from './pages/RecruiterDashboard';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import './App.css';
@@ -113,6 +115,30 @@ function App() {
             <ProtectedRoute>
               <Layout>
                 <AssessmentDetails />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Results Analytics */}
+        <Route
+          path="/results"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <ResultsAnalytics />
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Recruiter Dashboard */}
+        <Route
+          path="/recruiter"
+          element={
+            <ProtectedRoute>
+              <Layout>
+                <RecruiterDashboard />
               </Layout>
             </ProtectedRoute>
           }
